@@ -1,0 +1,53 @@
+---
+title: "Spatial Data"
+author: "Grzegorz Ziajka"
+date: "27 września 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+source("./SRC/viz_source.R")
+```
+
+## DATA
+
+```{r data-load, echo=FALSE, message=FALSE, warning=FALSE}
+load("./DATA/model_data.rda")
+```
+
+```{r data-head, echo=FALSE, message=FALSE, warning=FALSE}
+model_data %>% 
+  select(-LATITUDE, - LONGITUDE) %>%
+  head() %>%
+  knitr::kable(align = 'c')
+```
+
+## Initial distribution analysis
+
+```{r dist-plot, echo=FALSE, message=FALSE, warning=FALSE}
+model_data %>%
+  select(GENDER, AGE_GROUP, IS_CITY, POPULATION) %>%
+  melt(id.vars = "POPULATION") %>%
+  factor_dist_plot('value', 'variable', weight = "POPULATION") %>%
+  print()
+
+model_data %>%
+  select(SALARY, ALCOHOL, FERTILITY_RATE, EMISSION, POPULATION) %>%
+  melt(id.vars="POPULATION") %>%
+  numeric_dist_plot("value", "variable", weight = "POPULATION") %>%
+  print()
+
+model_data %>%
+  select(POPULATION, TARGET) %>%
+  melt() %>%
+  numeric_dist_plot('value', 'variable', weight = NULL, ncol = 2,
+                    nbins = 10, x_trans = 'log2') %>%
+  print()
+
+```
+
+## Examination of TARGET dependence on explanatory variables 
