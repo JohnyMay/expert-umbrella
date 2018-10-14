@@ -1,3 +1,5 @@
+library(dplyr)
+
 load("./DATA_RAW/Dane_BRCA_comp.rda")
 
 model_data <- dane_brca_comp %>%
